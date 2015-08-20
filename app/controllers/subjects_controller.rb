@@ -1,4 +1,5 @@
 class SubjectsController < ApplicationController
+
   layout false
 
   def index
