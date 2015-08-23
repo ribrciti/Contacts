@@ -1,6 +1,6 @@
 class SubjectsController < ApplicationController
 
-  layout false
+  layout "admin" #layout admin means go to layouts and use views/layouts/admin.html.erb
 
   def index
     @subjects = Subject.sorted
