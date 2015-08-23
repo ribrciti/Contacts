@@ -12,6 +12,7 @@ class SubjectsController < ApplicationController
 
   def new
     @subject = Subject.new({:name => "Default"})  # @subject not necessary, but include as best practise
+    @subject_count = Subject.count + 1
   end
 
   def create
@@ -21,11 +22,15 @@ class SubjectsController < ApplicationController
       redirect_to(:action => 'index')
     else
       render('new')
+       @subject_count = Subject.count + 1
     end
   end
 
   def edit
     @subject = find_params
+    @subject_count = Subject.count
+    @subjects = Subject.order('position ASC')
+    @page_count = Page.count
   end
 
   def update
@@ -34,6 +39,7 @@ class SubjectsController < ApplicationController
       flash[:notice] = "Subject updated successfully"     ## add flash hash
       redirect_to(:action => 'show', :id => @subject.id)
     else
+      @subject_count = Subject.count
       render('edit')
     end
   end
@@ -51,7 +57,7 @@ class SubjectsController < ApplicationController
   private
 
   def subject_params
-    params.require(:subject).permit(:name, :position, :visible)
+    params.require(:subject).permit(:name, :position, :visible, :created_at)
   end
 
   def find_params
