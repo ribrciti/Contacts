@@ -2,6 +2,7 @@ class PagesController < ApplicationController
 
   layout "admin" #layout admin means go to layouts and use views/layouts/admin.html.erb
  
+  before_action :confirm_logged_in
 
   def index
     @pages = Page.sorted   #sorted comes from pages model
