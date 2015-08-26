@@ -23,7 +23,7 @@ class AdminUser < ActiveRecord::Base
 	   # the next line adds a virtual attribute called email_confirmation
   #validates_confirmation_of :email
 
-=begin
+
   validates :first_name,  :presence => true,
                           :length => {:maximum => 25 }
   validates :last_name,   :presence => true,
@@ -31,18 +31,24 @@ class AdminUser < ActiveRecord::Base
   validates :username,    :length => { :within => 8..25 },
                           :uniqueness =>  true
   validates :email,       :presence => true,
-                          :length => { maximum => 100},
+                          :length => { :maximum => 100},
                           :format => EMAIL_REGEX,
                           :confirmation => true
 
 
   validate :username_is_allowed
  
+  scope :sorted, lambda { order("last_name ASC", "first_name ASC")}
+ 
+  def name
+    # Or:  "#{first_name} #{last_name}"
+    [first_name, last_name].join(' ')
+  end
 
   def username_is_allowed
     if FORBIDDEN_USERNAMES.include?(username)
       errors.add(:username, "has been restricted from use.")
     end
   end
-=end
+
 end

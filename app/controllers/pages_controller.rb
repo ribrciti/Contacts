@@ -3,9 +3,11 @@ class PagesController < ApplicationController
   layout "admin" #layout admin means go to layouts and use views/layouts/admin.html.erb
  
   before_action :confirm_logged_in
+  before_action :find_subject
 
   def index
-    @pages = Page.sorted   #sorted comes from pages model
+    #@pages = Page.where(:subject_id => @subject.id).sorted.   #sorted comes from pages model
+    @pages = @subject.pages.sorted   # same code as above but cleaner code
   end
 
   def show
@@ -13,7 +15,7 @@ class PagesController < ApplicationController
   end
 
   def new
-    @page = Page.new({:name => "Default"})
+    @page = Page.new({:subject_id => @subject.id, :name => "Default"})
     @page_count = Page.count + 1
     @subjects = Subject.order('position ASC')   # for pages/_form.html.erb for the subject variable
   end
@@ -22,10 +24,10 @@ class PagesController < ApplicationController
     @page = Page.new(page_params)
     if @page.save
       flash[:notice] = "Page Created Successfully"
-      redirect_to(:action => 'index')
+      redirect_to(:action => 'index', :subject_id => @subject.id)
     else
-      @page_count = Page.count + 1
       @subjects = Subject.order('position ASC')   # for pages/_form.html.erb for the subject variable
+      @page_count = Page.count + 1
       render('new')
     end
   end
@@ -40,7 +42,7 @@ class PagesController < ApplicationController
     @page = find_params    # first find the page to update
     if @page.update_attributes(page_params)
       flash[:notice] = "Page udated successfully"
-      redirect_to(:action => 'show', :id => @page.id)
+      redirect_to(:action => 'show', :id => @page.id, :subject_id => @subject.id)
     else
       @page_count = Page.count   # for pages/_form.html.erb for the position variable
       @subjects = Subject.order('position ASC')   # for pages/_form.html.erb for the subject variable
@@ -56,7 +58,7 @@ class PagesController < ApplicationController
   def destroy
     @page = find_params.destroy
     flash[:notice] = "Page deleted successfully"
-    redirect_to(:action => 'index')
+    redirect_to(:action => 'index', :subject_id => @subject.id,)
   end
 
 
@@ -68,6 +70,12 @@ class PagesController < ApplicationController
 
   def find_params
     Page.find(params[:id])    # page params id is the number before the ?
+  end
+
+  def find_subject
+    if params[:subject_id]
+      @subject = Subject.find(params[:subject_id])
+    end    
   end
 end
 
