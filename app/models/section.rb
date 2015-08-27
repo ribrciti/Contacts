@@ -1,8 +1,10 @@
 class Section < ActiveRecord::Base
-	
-	belongs_to :page
+
+  belongs_to :page
 	has_many  :section_edits
 	has_many :editors, :through => :section_edits, :class_name => "AdminUser"
+
+  after_save :touch_page   
 
 	CONTENT_TYPES = ['text', 'HTML']
 
@@ -18,4 +20,12 @@ class Section < ActiveRecord::Base
   scope :newest_first, lambda { order("sections.created_at DESC") }
   scope :search, lambda {|query| where(["name LIKE ?", "%#{query}&" ])  
   }
+
+  private
+
+  def touch_page
+    #touch is similar to:
+    #subject.update_attribute(:updated_at, Time.now)
+    page.touch
+  end
 end

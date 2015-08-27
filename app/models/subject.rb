@@ -2,6 +2,8 @@ class Subject < ActiveRecord::Base
 
 	has_many :pages
 
+	acts_as_list      # from gem installed 
+
 	validates_presence_of :name
 	validates_length_of :name, :maximum => 255
 	
