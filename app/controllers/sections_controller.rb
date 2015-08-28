@@ -5,8 +5,6 @@ class SectionsController < ApplicationController
   before_action :confirm_logged_in       # from application controller
   before_action :find_page               # private method
 
-  acts_as_list :scope => :page     # from gem installed 
-
   def index
     @sections = @page.sections.sorted
   end

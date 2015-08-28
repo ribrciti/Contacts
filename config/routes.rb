@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
  
-  root "subjects#index"
+  root "public#index"
+  
+  get 'show/:permalink', :to => 'public#show'
 
   get 'admin', :to => "access#ndex"
 
